@@ -1,0 +1,69 @@
+---
+title: "mut_info()"
+output:
+  html_document: default
+  pdf_document: default
+vignette: |
+  %\VignetteIndexEntry{read_med() vignette} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+---
+
+```{r echo = FALSE, warning=FALSE}
+library(YEAB)
+```
+
+## Introduction
+
+Behavioral analysis is a field of study in which the necessity oftenly arise to understand the way in which different variables relate to each other and the meaning behind such relationships. One useful and powerful tool used to adress this questions is the concept of mutual information, rooted in information theory.
+
+Information theory provides an ideal framework for quantifying the amount of information related between variables. In this scenario, mutual information allows to measure the degree of dependency between two variables by assessing how much knowing one variable reduces uncertainty about the other. This metric is particularly valuable in the realm of behavioral analysis as it allows researchers to discern connections and dependencies between experimental variables and the behaviors observed.
+
+Here we introduce two functions to calculate Mutual Information using a wide variety of methods. The general definition for calculating Mutual Information is as follows:
+
+$$I(X;Y) = \sum_{i=1}^{n} \sum_{j=1}^{m}P(x_i,y_j)log \frac{P(x_i,y_j)}{P(x_i)P(y_j)} $$
+Where $X$ and $Y$ are discrete random variables and $P(x_i)$ and $P(y_j)$ are the probabilities of every possible state of $X$ and $Y$ respectively.
+
+The `mut_info_discret()` function calculates Mutual Information of continous variables using discretization through the `discretize()` function from the `infotheo` package. The function provide the use of four different methods to estimate entropy, see [`mutinformation()`](https://www.rdocumentation.org/packages/infotheo/versions/1.2.0.1/topics/mutinformation) documentation for details. The function takes the following parameters:
+
+- `x` a numeric vector representing random variable $X$.
+- `y` a numeric vector of equal or different size as `x` representing random variable $Y$.
+- `method` the method to estimate entropy; available methods are `emp`, `mm`, `shrink`, `sg` (`emp` by default).
+
+We also provide the `mut_info_knn()` function for calculating the Mutual Information for continuous variables using "kNN" or "k-nearest neighbors" method through the `knn_mi` function from the [`rmi`](https://cran.r-project.org/web/packages/rmi/rmi.pdf) package, for details see [Kraskov et al. (2004)](https://doi.org/10.1103/PhysRevE.69.066138). The function takes the following parameters:
+
+- `x` a numeric vector representing random variable $X$.
+- `y` a numeric vector of equal or different size as `x` representing random variable $Y$.
+- `method` available methods: `KSG1` and `KSG2`.
+- `k` the number of nearest neighbors to search (5 by default).
+
+## Example
+
+```{r}
+set.seed(123)
+x <- rnorm(1000)
+y <- rnorm(1000)
+plot(x, y)
+# close to 0 if they are independent
+mut_info_discret(x, y)
+y <- 100 * x + rnorm(length(x), 0, 12)
+plot(x, y)
+# far from 0 if they are not independent
+mut_info_discret(x, y)
+# simulate a sine function with noise
+set.seed(123)
+x <- seq(0, 5, 0.1)
+y <- 5 * sin(x * pi)
+y_with_noise <- y + rnorm(length(x), 0, 1)
+plot(x, y_with_noise)
+lines(x, y, col = 2)
+# add a regression line
+abline(lm(y ~ x))
+# compute correlation coefficient; for nonlinear functions is close to 0
+cor(x, y_with_noise)
+# mutual information can detect nonlinear dependencies
+mut_info_discret(x, y_with_noise)
+
+```
+
+

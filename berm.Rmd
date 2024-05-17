@@ -1,0 +1,36 @@
+---
+title: "berm()"
+output:
+  html_document: default
+  pdf_document: default
+vignette: |
+  %\VignetteIndexEntry{read_med() vignette} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+---
+
+```{r echo = FALSE, warning=FALSE}
+library(YEAB)
+```
+
+## Introduction
+
+The BERM (Bi-exponential Refractory Model) serves as a powerful tool for analyzing and understanding the organization of operant behavior in experimental treatments. Extensive empirical evidence has shown that operant behavior, even during reinforcement, is not unitary but instead organized into bouts of responses separated by relatively long pauses. Consequently, operant performance is determined by the rate at which bouts are initiated, the response rate within bouts, and the length of bouts. Using overall response rate as a unitary measure conflates these dissociable behavioral components.Conversely, a microscopic behavioral analysis breaks down performance into its behavioral components by decomposing overall response rate into several elementary measures.
+
+Moreover, empirical evidence suggests that the distribution of interresponse times (IRTs) is a mixture of two exponential distributions. This aligns with the notion that responses are organized into bouts: one exponential distribution describes long IRTs separating bouts, while the other describes short IRTs separating responses within bouts. Adding a refractory period between responses (the time it takes to action the operant), the bi-exponential distribution may be expressed as follow:
+
+$$p(IRT = \tau | \tau \ge \delta) = p w e^{-w (\tau - \delta)} + (1-p)b e^{-b (\tau - \delta)} , w > b$$
+Where $p$ is the proportion of IRTs within bouts and $1 − p$ is the complementary proportion of IRTs between bouts, $b$ is the bout-initiation rate, $w$ is the within-bout response rate, and $\delta$ is the refractory period. The necessity of $\delta$ is justified both theoretically, because each response takes a finite amount of time to complete, and empirically.
+
+```{r eval = FALSE}
+l1 <- 1/0.5
+l2 <- 1/0.1
+theta <- 0.5
+irt <- c(
+ rexp(100, l1),
+rexp(100, l2)
+)
+plot(irt)
+biexponential(irt)
+berm(irt, 0.1)
+```

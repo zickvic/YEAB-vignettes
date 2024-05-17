@@ -1,0 +1,23 @@
+---
+title: "hyperbolic_fit()"
+output:
+  html_document: default
+  pdf_document: default
+vignette: |
+  %\VignetteIndexEntry{read_med() vignette} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(tidy = FALSE)
+```
+
+```{r echo = FALSE}
+library(YEAB)
+```
+
+## Introduction
+
+Delay discounting refers to the decline in value of a reward based on the time to its
+delivery. The steepness of delay discounting tends to be consistent within individuals, for which
+this attribute counts as a behavioral trait [(Odum, 2011).](https://doi.org/10.1901/jeab.2011.96-423)
